@@ -1,721 +1,515 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Portfolio of Vamshi Prasad Goteti, a Full Stack Developer with experience in React, Azure, AWS, and more.">
-  <meta name="keywords" content="Vamshi Prasad Goteti, Full Stack Developer, Portfolio, React, Azure, AWS, C#, Java, Power BI, Tableau">
-  <meta name="author" content="Vamshi Prasad Goteti">
-  <title>Vamshi Prasad Goteti Portfolio</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dynamic Element Creator — Demo</title>
   <style>
+    :root {
+      --card: #0b1320;
+      --muted: #333;
+      --accent: #06b6d4;
+      --glass: rgba(255, 255, 255, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: Inter, Ui-sans-serif, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    }
+
     body {
-      background: #0d1117;
-      color: white;
-      font-family: 'Segoe UI', sans-serif;
       margin: 0;
-      overflow-x: hidden;
-      position: relative;
+      background: linear-gradient(120deg, #ffecd2 0%, #fcb69f 100%);
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 36px;
     }
-    .prism-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      background: linear-gradient(45deg, #ff0000, #ff9900, #33cc33, #00b7eb, #6633cc, #ff0000);
-      background-size: 600%;
-      animation: prismShift 20s ease infinite;
-      opacity: 0.7;
-    }
-    .prism-shapes {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
-    }
-    .prism-shapes::before,
-    .prism-shapes::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 0;
-      border-left: 30px solid transparent;
-      border-right: 30px solid transparent;
-      border-bottom: 52px solid rgba(255, 255, 255, 0.2);
-      animation: drift 25s linear infinite;
-    }
-    .prism-shapes::before {
-      top: -60px;
-      left: 10%;
-      animation-delay: 0s;
-    }
-    .prism-shapes::after {
-      top: -60px;
-      left: 60%;
-      animation-delay: 10s;
-    }
-    @keyframes prismShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    @keyframes drift {
-      0% { transform: translateY(0) rotate(0deg); }
-      100% { transform: translateY(120vh) rotate(360deg); }
-    }
-    .skill-card {
-      background-color: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
+
+    .app {
+      width: 900px;
+      max-width: 96%;
+      background: rgba(255,255,255,0.6);
+      border-radius: 14px;
       padding: 20px;
-      text-align: center;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     }
-    .skill-card:hover {
-      background-color: rgba(255, 255, 255, 0.9);
-      color: black;
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
     }
-    .skill-card img {
-      height: 50px;
+
+    h1 {
+      font-size: 20px;
+      margin: 0;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    input[type=text], 
+    textarea {
+      background: var(--glass);
+      border: 1px solid rgba(0,0,0,0.1);
+      color: inherit;
+      padding: 8px 10px;
+      border-radius: 8px;
+      outline: none;
+      min-width: 220px;
+    }
+
+    textarea {
+      min-height: 64px;
+      resize: vertical;
+    }
+
+    button {
+      background: var(--accent);
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button.ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .layout {
+      display: block;
+    }
+
+    .left {
+      min-height: 320px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
       margin-bottom: 10px;
     }
-    .carousel-item {
-      padding: 20px;
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
     }
-    @media (max-width: 576px) {
-      .carousel-item {
-        padding: 10px;
-      }
-    }
-    .project-card {
+
+    .card {
+      background: rgba(255,255,255,0.6);
+      padding: 12px;
       border-radius: 10px;
-      padding: 20px;
-      min-height: 260px;
-      background-size: cover !important;
-      background-position: center !important;
-      color: #fff;
-      text-shadow: 1px 1px 3px #000;
+      border: 1px solid rgba(0,0,0,0.05);
+      position: relative;
+      overflow: hidden;
     }
-    .project-card .btn {
-      margin-top: 10px;
+
+    .card h3 {
+      margin: 0 0 8px 0;
+      font-size: 15px;
     }
-    form {
-      max-width: 600px;
-      width: 100%;
+
+    .card p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+      min-height: 36px;
     }
-    .attribution {
-      font-size: 0.8rem;
-      color: #888;
+
+    .card .meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .badge {
+      font-size: 12px;
+      padding: 4px 6px;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.05);
+      color: var(--muted);
+    }
+
+    .card .actions {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      display: flex;
+      gap: 6px;
+    }
+
+    .small {
+      padding: 6px 8px;
+      font-size: 13px;
+      border-radius: 8px;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 40px 10px;
+    }
+
+    footer {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="prism-background"></div>
-  <div class="prism-shapes"></div>
-  <nav class="navbar navbar-dark bg-dark px-5" role="navigation">
-    <span class="navbar-brand">My Portfolio</span>
-    <div>
-      <a class="nav-link d-inline text-white" href="#skills" aria-label="Skills Section">Skills</a>
-      <a class="nav-link d-inline text-white" href="#projects" aria-label="Projects Section">Projects</a>
-      <a class="nav-link d-inline text-white" href="#contact" aria-label="Contact Section">Contact</a>
+  <div class="app" id="app">
+    <div class="header">
+      <h1>Dynamic Element Creator — Cards Demo</h1>
+      <div class="controls">
+        <input id="search" type="text" placeholder="Search title or description...">
+        <select id="sort">
+          <option value="new">Newest</option>
+          <option value="old">Oldest</option>
+          <option value="title">Title A→Z</option>
+        </select>
+        <button id="clear" class="ghost small">Clear All</button>
+      </div>
     </div>
-  </nav>
 
-  <header class="container text-center my-5">
-    <h1>Hi! I'm <span class="text-warning">Vamshi Prasad Goteti</span></h1>
-    <h3>Full Stack Developer</h3>
-    <p class="mt-3">Industrially trained and Experienced with 1 year Placement projects with clients through University of East London.Highly motivated and detail-oriented web developer with a strong foundation in front-end and back-end technologies. Proficient in HTML, CSS, JavaScript, and React, with hands-on experience in building responsive and dynamic web applications. Known for excellent problem-solving skills, teamwork, and a passion for creating user-friendly digital experiences.</p>
-    <a class="btn btn-warning mt-3" href="Vamshi_Ats_Res1.docx" download="Vamshi_Ats_Res1.docx">Download CV</a>
-  </header>
+    <div class="layout">
+      <div class="left">
+        <div class="filters">
+          <input id="title" type="text" placeholder="Card title (required)">
+          <button id="add" class="small">Add Card</button>
+        </div>
+        <textarea id="desc" placeholder="Card description (optional)"></textarea>
 
-  <section id="skills" class="container my-5">
-    <h2 class="text-warning text-center">My Skills</h2>
-    <p class="text-center text-muted">Technologies I've mastered through experience</p>
-    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4 mt-3">
-      <div class="col"><div class="skill-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5" loading="lazy"><p>HTML5</p></div></div>
-      <div class="col"><div class="skill-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3" loading="lazy"><p>CSS3</p></div></div>
-      <div class="col"><div class="skill-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" loading="lazy"><p>JavaScript</p></div></div>
-      <div class="col"><div class="skill-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" loading="lazy"><p>React</p></div></div>
-      <div class="col"><div class="skill-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-plain.svg" alt="Bootstrap" loading="lazy"><p>Bootstrap</p></div></div>
-      <div class="col"><div class="skill-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma" loading="lazy"><p>Figma</p></div></div>
-      <div class="col"><div class="skill-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonwebservices/amazonwebservices-plain-wordmark.svg" alt="AWS" loading="lazy"><p>AWS</p></div></div>
-      <div class="col"><div class="skill-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original.svg" alt="Azure" " alt="Azure" " alt="Azure" loading="lazy"><p>Azure</p></div></div>
-      <div class="col"><div class="skill-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azuredevops/azuredevops-plain.svg" alt="DevOps" loading="lazy"><p>DevOps</p></div></div>
-      <div class="col"><div class="skill-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-plain.svg" alt="C#" loading="lazy"><p>C#</p></div></div>
-      <div class="col"><div class="skill-card"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-plain.svg" alt="Java" loading="lazy"><p>Java</p></div></div>
-      <div class="col"><div class="skill-card"><img src="https://raw.githubusercontent.com/microsoft/PowerBI-Icons/master/SVG/Power-BI.svg" alt="Power BI" loading="lazy"><p>Power BI</p></div></div>
-      <div class="col"><div class="skill-card"><img src="https://img.icons8.com/color/48/000000/tableau-software.png" alt="Tableau" loading="lazy"><p>Tableau</p></div></div>
+        <div style="margin-top:12px">
+          <div class="cards" id="cards"></div>
+          <div id="empty" class="empty" style="display:none">
+            No cards yet — add one to get started.
+          </div>
+        </div>
+      </div>
     </div>
-  </section>
 
-  <section id="projects" class="container my-5">
-    <h2 class="text-warning text-center">My Projects</h2>
-    <p class="text-center text-muted">Here are some of my recent works</p>
-    <div id="projectCarousel" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <div class="project-card" style="background-image: url('https://images.unsplash.com/photo-1581090700227-1e7fcb89d61b');" role="img" aria-label="Real Estate Website Screenshot" loading="lazy">
-            <h4>Real Estate Website</h4>
-            <p>Responsive site using React & Tailwind CSS for a real estate platform.</p>
-            <a class="btn btn-outline-light" href="https://demo.vamshi-prasad.com/real-estate">View Project</a>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="project-card" style="background-image: url('https://images.unsplash.com/photo-1500964757637-c85e8a162699');" role="img" aria-label="Weather Dashboard Screenshot" loading="lazy">
-            <h4>Weather Dashboard</h4>
-            <p>Interactive dashboard built with Vue.js and Bootstrap, fetching real-time weather data via OpenWeatherMap API.</p>
-            <a class="btn btn-outline-light" href="https://demo.vamshi-prasad.com/weather-dashboard">View Project</a>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="project-card" style="background-image: url('https://images.unsplash.com/photo-1605379399642-870262d3d051');" role="img" aria-label="Portfolio Website Screenshot" loading="lazy">
-            <h4>Portfolio</h4>
-            <p>Modern React-based portfolio using Three.js and Framer Motion for animations.</p>
-            <a class="btn btn-outline-light" href="https://demo.vamshi-prasad.com/portfolio">View Project</a>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="project-card" style="background-image: url('https://images.unsplash.com/photo-1526498469089-1fcee81e2c67');" role="img" aria-label="Photography Portfolio Screenshot" loading="lazy">
-            <h4>Photography Portfolio</h4>
-            <p>Responsive gallery site using React and CSS Grid with lazy-loaded images and lightbox effects.</p>
-            <a class="btn btn-outline-light" href="https://demo.vamshi-prasad.com/photography-portfolio">View Project</a>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="project-card" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c');" role="img" aria-label="Task Manager App Screenshot" loading="lazy">
-            <h4>Task Manager App</h4>
-            <p>Vue & Vuex app with calendar, drag-and-drop tasks, and local storage.</p>
-            <a class="btn btn-outline-light" href="https://demo.vamshi-prasad.com/task-manager">View Project</a>
-          </div>
-        </div>
-        <div class="carousel-item">
-          <div class="project-card" style="background-image: url('https://images.unsplash.com/photo-1505373877841-8d25f7d46678');" role="img" aria-label="Event Booking App Screenshot" loading="lazy">
-            <h4>Event Booking App</h4>
-            <p>Front-end app built with JavaScript and Bootstrap, featuring a dynamic event calendar and booking form.</p>
-            <a class="btn btn-outline-light" href="https://demo.vamshi-prasad.com/event-booking">View Project</a>
-          </div>
-        </div>
-      </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#projectCarousel" data-bs-slide="prev" aria-label="Previous Project">
-        <span class="carousel-control-prev-icon"></span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#projectCarousel" data-bs-slide="next" aria-label="Next Project">
-        <span class="carousel-control-next-icon"></span>
-      </button>
-    </div>
-  </section>
+    <footer>
+      © 2025 My Project — All Rights Reserved
+    </footer>
+  </div>
 
-  <section id="contact" class="container my-5">
-    <h2 class="text-warning text-center">Get In Touch</h2>
-    <form action="https://formspree.io/f/your-form-id" method="POST" class="bg-dark p-4 rounded shadow-lg mx-auto">
-      <div class="mb-3">
-        <input type="text" class="form-control" placeholder="Enter your name" aria-label="Name" required>
-      </div>
-      <div class="mb-3">
-        <input type="email" class="form-control" placeholder="Enter your email" aria-label="Email" required>
-      </div>
-      <div class="mb-3">
-        <textarea class="form-control" rows="4" placeholder="Write your message" aria-label="Message" required></textarea>
-      </div>
-      <button type="submit" class="btn btn-warning w-100">Send Message</button>
-    </form>
-  </section>
-
-  <footer class="text-center py-3">
-    <a href="https://linkedin.com/in/vamshi-prasad-goteti" class="text-white mx-2" aria-label="LinkedIn Profile"><i class="fab fa-linkedin"></i></a>
-    <a href="https://github.com/vamshi-prasad" class="text-white mx-2" aria-label="GitHub Profile"><i class="fab fa-github"></i></a>
-    <p class="attribution">Azure icon by <a href="https://learn.microsoft.com/en-us/azure/architecture/icons/" target="_blank">Microsoft Azure</a> | Tableau icon by <a href="https://github.com/devicons/devicon" target="_blank">Devicon</a> | Power BI icon by <a href="https://github.com/microsoft/PowerBI-Icons" target="_blank">Microsoft</a></p>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
   <script>
-    document.querySelectorAll('.nav-link').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
-      });
+    const $ = sel => document.querySelector(sel);
+    const cardsEl = $('#cards');
+    const titleInput = $('#title');
+    const descInput = $('#desc');
+    const addBtn = $('#add');
+    const clearBtn = $('#clear');
+    const emptyEl = $('#empty');
+    const searchInput = $('#search');
+    const sortSelect = $('#sort');
+
+    let cards = [];
+    const STORAGE_KEY = 'dynamic_cards_v1';
+
+    function load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        cards = raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        cards = [];
+      }
+      render();
+    }
+
+    function save() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+    }
+
+    function uid() {
+      return 'c_' + Math.random().toString(36).slice(2, 9);
+    }
+
+    function createCardObject(title, desc) {
+      return {
+        id: uid(),
+        title: title.trim(),
+        desc: desc.trim(),
+        done: false,
+        created: Date.now()
+      };
+    }
+
+    function render() {
+      const query = searchInput.value.trim().toLowerCase();
+      let list = [...cards];
+
+      if (query) {
+        list = list.filter(c =>
+          c.title.toLowerCase().includes(query) ||
+          c.desc.toLowerCase().includes(query)
+        );
+      }
+
+      const sort = sortSelect.value;
+      if (sort === 'new') list.sort((a,b) => b.created - a.created);
+      else if (sort === 'old') list.sort((a,b) => a.created - b.created);
+      else if (sort === 'title') list.sort((a,b) => a.title.localeCompare(b.title));
+
+      cardsEl.innerHTML = '';
+      if (list.length === 0) {
+        emptyEl.style.display = 'block';
+        return;
+      }
+      emptyEl.style.display = 'none';
+
+      for (const card of list) {
+        const node = buildCard(card);
+        cardsEl.appendChild(node);
+      }
+    }
+
+    function buildCard(card) {
+      const el = document.createElement('article');
+      el.className = 'card';
+      el.dataset.id = card.id;
+
+      const actions = document.createElement('div');
+      actions.className = 'actions';
+
+      const editBtn = document.createElement('button');
+      editBtn.className = 'ghost small';
+      editBtn.textContent = 'Edit';
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'ghost small';
+      delBtn.textContent = 'Delete';
+
+      const doneBtn = document.createElement('button');
+      doneBtn.className = 'small';
+      doneBtn.textContent = card.done ? 'Undo' : 'Done';
+
+      actions.append(editBtn, delBtn, doneBtn);
+
+      const h = document.createElement('h3');
+      h.textContent = card.title || '(no title)';
+
+      const p = document.createElement('p');
+      p.textContent = card.desc || '';
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+
+      const badge = document.createElement('span');
+      badge.className = 'badge';
+      badge.textContent = new Date(card.created).toLocaleString();
+
+      const status = document.createElement('span');
+      status.className = 'badge';
+      status.textContent = card.done ? 'Completed' : 'Pending';
+
+      meta.append(badge, status);
+
+      el.appendChild(actions);
+      el.appendChild(h);
+      el.appendChild(p);
+      el.appendChild(meta);
+
+      if (card.done) {
+        el.style.opacity = '0.7';
+        el.style.textDecoration = 'line-through';
+      }
+
+      editBtn.addEventListener('click', () => onEdit(card.id, el));
+      delBtn.addEventListener('click', () => onDelete(card.id));
+      doneBtn.addEventListener('click', () => onToggleDone(card.id));
+
+      return el;
+    }
+
+    addBtn.addEventListener('click', () => {
+      const t = titleInput.value;
+      if (!t.trim()) {
+        alert('Please provide a title');
+        titleInput.focus();
+        return;
+      }
+      const obj = createCardObject(t, descInput.value || '');
+      cards.push(obj);
+      save();
+      render();
+      titleInput.value = '';
+      descInput.value = '';
+      titleInput.focus();
     });
-    document.querySelector('form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      alert('Form submitted! Please configure Formspree with your form ID for full functionality.');
+
+    function onEdit(id, el) {
+      const card = cards.find(c => c.id === id);
+      if (!card) return;
+
+      el.innerHTML = '';
+
+      const titleInp = document.createElement('input');
+      titleInp.type = 'text';
+      titleInp.value = card.title;
+      titleInp.style.width = '100%';
+
+      const descInp = document.createElement('textarea');
+      descInp.value = card.desc;
+      descInp.style.width = '100%';
+      descInp.style.marginTop = '8px';
+
+      const saveBtn = document.createElement('button');
+      saveBtn.textContent = 'Save';
+      saveBtn.className = 'small';
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.textContent = 'Cancel';
+      cancelBtn.className = 'ghost small';
+
+      const btns = document.createElement('div');
+      btns.style.marginTop = '8px';
+      btns.style.display = 'flex';
+      btns.style.gap = '8px';
+      btns.append(saveBtn, cancelBtn);
+
+      el.append(titleInp, descInp, btns);
+
+      cancelBtn.addEventListener('click', () => render());
+      saveBtn.addEventListener('click', () => {
+        card.title = titleInp.value.trim() || '(no title)';
+        card.desc = descInp.value.trim();
+        save();
+        render();
+      });
+    }
+
+    function onDelete(id) {
+      if (!confirm('Delete this card?')) return;
+      cards = cards.filter(c => c.id !== id);
+      save();
+      render();
+    }
+
+    function onToggleDone(id) {
+      const card = cards.find(c => c.id === id);
+      if (!card) return;
+      card.done = !card.done;
+      save();
+      render();
+    }
+
+    clearBtn.addEventListener('click', () => {
+      if (!confirm('Clear all cards?')) return;
+      cards = [];
+      save();
+      render();
+      alert('All cards cleared.');
+    });
+
+    searchInput.addEventListener('input', () => render());
+    sortSelect.addEventListener('change', () => render());
+
+    load();
+
+    titleInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        addBtn.click();
+        e.preventDefault();
+      }
     });
   </script>
-=======
-<html lang="en">
-<head>
-    <!--========Meta Tags SEO======-->
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content=" Portfolio of a Data Analyst | Proficient in Python, SQL, Power BI & MS Excel ">
-    <meta name="keywords" content="Data Analyst | Business Intelligence | Machine Learning | Analytics | Queen Mary University of London">
-    
-    <!--=========Canonical Tag=======-->
-    <link rel="canonical" href="">
-
-    <!--========Social Media Tag=========-->
-    <meta property="og:title" content="Vamshi Cloud Portfolio">
-    <meta property="og:description" content="Cloud Portfolio | Proficient in Python, SQL, AWS & Linux ">
-    <meta property="og:url" content="https://vamshigotei.github.io/portfolio/">
-    <meta property="og:type" content="website">
-
-    <!--========Title===== -->
-    <title>Vamshi Prasad Goteti</title>
-
-    <!--========Site Icon===== -->
-    <link rel="shortcut icon" type="image/png" href="./img/vpg.png">
-
-    <!--========Stylesheet===== -->
-    <link rel="stylesheet" href="./files/style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rubik&amp;display=swap">
-
-    <!--========BoxIcons===== -->
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
-    <!--========TailwindCSS===== -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!--========TypedJS===== -->
-    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
-    <!--========JSON Script======-->
-    <script type="application/ld+json">
-        {
-            "@context": "http://schema.org",
-            "@type": "Person",
-            "name": "Vamshi Prasad Goteti",
-            "url": "",
-            "image": "",
-            "sameAs": [
-                "",
-                ""
-            ],
-            "jobTitle": "Cloud Engineer",
-            "description": "",
-            "alumniOf": {
-                "@type": "",
-                "name": ""
-            }
-        }
-    </script>
-    <style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.16 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}
-        ::after,::before{--tw-content:''}
-        :host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}
-        body{margin:0;line-height:inherit}
-        hr{height:0;color:inherit;border-top-width:1px}
-        abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}
-        h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}
-        a{color:inherit;text-decoration:inherit}
-        b,strong{font-weight:bolder}
-        code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}
-        small{font-size:80%}
-        sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
-        sub{bottom:-.25em}
-        sup{top:-.5em}
-        table{text-indent:0;border-color:inherit;border-collapse:collapse}
-        button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}
-        button,select{text-transform:none}
-        button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}
-        :-moz-focusring{outline:auto}
-        :-moz-ui-invalid{box-shadow:none}
-        progress{vertical-align:baseline}
-        ::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}
-        ::-webkit-search-decoration{-webkit-appearance:none}
-        ::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}
-        summary{display:list-item}
-        blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}
-        fieldset{margin:0;padding:0}
-        legend{padding:0}
-        menu,ol,ul{list-style:none;margin:0;padding:0}
-        dialog{padding:0}
-        textarea{resize:vertical}
-        input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}
-    </style>
-</head>
-<body>
-    <!-- =========================================NavBar========================================= -->
-    <header class="header" id="header">
-        <a class="logo" href="https://github.com/Vmshibharadwaj19">VamshiPrasad Goteti</a> 
-
-        <input type="checkbox" id="menu-toggle" class="menu-toggle">
-        <label for="menu-toggle" class="menu-icon"><i class="bx bx-menu"></i></label>
-
-        <nav class="custom-navbar" id="myLinks">
-            <a href="#home" style="--i:1" class="active">Home</a>
-            <a href="#projects" style="--i:4">Projects</a>
-            <a href="#timeline" style="--i:1">Timeline</a>
-            <a href="#tools" style="--i:3">Skills</a>
-            <a href="#contact" style="--i:5">Contact</a>
-        </nav>
-    </header>
-
-    <!-- =========================================Home========================================= -->   
-    <section id="home" class="home-section">
-        <div class="home-container">
-          <!---- HOME LEFT SIDE ---->
-          <div class="home-left">
-            <div class="profile-img-container">
-                <img src="img/pro-pic.jpeg" alt="Vijayalakshmi" class="profile-img" />
-            </div>
-            <h3 class="home-tagline">Cloud Engineer</h3>
-            <p class="home-tools">AWS • SQL • Devops • .Net Framework</p>
-            <div class="social-icons">
-                <a href="https://www.linkedin.com/in/vamshi-goteti-84191023b" target="_blank"><i class="bx bxl-linkedin"></i></a>
-                <a href="https://github.com/Vmshibharadwaj19" target="_blank"><i class="bx bxl-github"></i></a>
-            </div>
-          </div>
-      
-          <!---- HOME RIGHT SIDE ---->
-          <div class="home-right">
-            <h2>Hello!</h2>
-            <h1>I'm <span>Vamshi</span></h1>
-            <p>
-               MSc Computing graduate (Merit, 64%) with hands-on backend development experience in ASP.NET MVC, C#, and SQL Server. Proven expertise in REST API development, AWS cloud services (EC2, S3, IAM), and CI/CD automation using GitHub Actions. Built secure, scalable LMS modules, reducing bugs by 35% and boosting DB performance by 30%. Seeking backend or cloud-focused roles in the UK where I can contribute to building high-performing systems.
-            </p>
-          </div>
-        </div>
-    </section>
-    
-    <!-- =========================================Case Studies===========================================-->
-    <section id="projects" class="project-section">
-        <div class="projects-container">
-            <h2 class="section-title reveal">Case <span>Studies</span></h2>
-            <div class="project-cards-box">
-                <!-- Project One -->
-                <div class="project-card">
-                    <div class="project-title">
-                        <h4>Portfolio Auto Deployment Pipeline , Github-AWS EC2 Instance </h4>
-                    </div>
-                    <div class ="project-content"> 
-                        <div class="project-image-container">
-                            <img src="img/project-images/overview.png">
-                        </div>
-                        <div class="project-description">
-                            <p>successfully hosted my personal resume website on an AWS EC2 instance and implemented an automated CI/CD pipeline using GitHub Actions. This setup ensures that updates pushed to my GitHub repository are deployed live without manual effort. I used GitHub Actions for the workflow, AWS EC2 (Ubuntu) for hosting, Apache Web Server to serve the HTML resume, SSH key pairs for secure access, and GitHub Secrets for configuration. Key achievements include launching an EC2 instance with Apache, securing an SSH key pair, and automating deployment to http://ec2-52-207-236-91.compute-1.amazonaws.com/. I learned to write GitHub Actions YAML files, set up Apache on EC2, use GitHub Secrets securely, and automate end-to-end deployment. Future plans include adding a custom domain, enabling HTTPS with SSL, and automating resume generation from Markdown or LaTeX. Explore more at https://nextwork.org. Everyone deserves to be in a job they love!.</p>
-                            <p><span><b>Key Concepts: </b></span> CI/CD Pipeline,
-AWS EC2,
-Apache Web Server,
-SSH and Key Pairs,
-GitHub Secrets,
-Automation Scripting,
-Security Groups,
-Version Control Integration,</p>
-                            <p><span><b>Tools: </b></span> AWS , Github ,VSCODE</p>
-                            <a href="https://github.com/Vmshibharadwaj19/Resume-Auto-Deploy-Github-EC2/tree/main" , target="_blank" class="btn-box-primary">View on GitHub</a>
-                        </div>
-                    </div>
-                </div> 
-                <!-- Project Two -->    
-                <div class="project-card">
-                    <div class="project-title">
-                        <h4>AI-Driven Customer Service Impact on Brand Perception</h4>
-                    </div>
-                    <div class ="project-content"> 
-                        <div class="project-image-container">
-                            <img src="img/project-images/studying-AI-1.png">
-                        </div>
-                        <div class="project-description">
-                            <p>This mini project involves visualizing data using Amazon QuickSight. The dataset used is the Amazon Best Seller dataset, which includes 1000 rows of real-life sample data. The dataset consists of a CSV file and a manifest.json file, which is used by QuickSight to access data from an S3 bucket</p>
-                            <p><span><b>Key Concepts:</b></span>Data Analysis </p>
-                            <p><span><b>Tools:</b></span> AWS S3 bucket , Amaxon Quicksite ,Dataset </p>
-                            <a href="https://github.com/Vmshibharadwaj19/AWS-Quicksight" , target="_blank" class="btn-box-primary">View on GitHub</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Project Three -->
-                <div class="project-card">
-                    <div class="project-title">
-                        <h4>Host a Website Using EC2</h4>
-                    </div>
-                    <div class ="project-content"> 
-                        <div class="project-image-container">
-                            <img src="img/project-images/bikestore-SQL-1.png">
-                        </div>
-                        <div class="project-description">
-                            <p>This project demonstrates the complete process of deploying a personal portfolio website on an Amazon EC2 instance using the AWS Free Tier. The website is sourced from a GitHub repository and hosted using Apache HTTP Server on an Amazon Linux 2023 AMI. This deployment showcases practical skills in cloud provisioning, Linux system configuration, Apache web server setup, and GitHub integration.</p>
-                            <p><span><b>Key Concepts:</b></span> This project demonstrates the complete process of deploying a personal portfolio website on an Amazon EC2 instance using the AWS Free Tier. The website is sourced from a GitHub repository and hosted using Apache HTTP Server on an Amazon Linux 2023 AMI. This deployment showcases practical skills in cloud provisioning, Linux system configuration, Apache web server setup, and GitHub integration.</p>
-                            <p><span><b>Tools:</b></span> AWS EC2, Linux,Github and window functions</p>
-                            <a href="https://github.com/Vmshibharadwaj19/Aws" , target="_blank" class="btn-box-primary">View on GitHub</a>
-                        </div>
-                        
-                    </div>
-                </div>     
-                <!-- Project Four -->
-                <div class="project-card">
-                    <div class="project-title">
-                        <h4>Set Up a Web App Using AWS and VS Code
-
-
-</h4>
-                    </div>
-                    <div class ="project-content"> 
-                        <div class="project-image-container">
-                            <img src="img/project-images/market-basket_1.png">
-                        </div>
-                        <div class="project-description">
-                            <p>using Amazon EC2 and Visual Studio Code (VS Code). This was part of a hands-on DevOps learning journey with a goal of eventually building a full CI/CD pipeline.</p>
-                            <p><span><b>Key Concepts:</b></span> Amazon EC2: Virtual machine in the cloud for app deployment,SSH Connections: Secure login to the EC2 instance
-Key Pairs: Secure authentication for remote access,VS Code with Remote-SSH Extension: Live editing files on the server,
-Java & Maven: Java-based web application creation using archetypes.</p>
-                            <p><span><b>Tools:</b></span> Amazon Web Services ,Linux ,Apaxhe2,Maven ,Devops CI/CD </p>
-                            <a href="https://github.com/Vmshibharadwaj19/WebApp-Aws" , target="_blank" class="btn-box-primary">View on GitHub</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Project Five -->
-                <div class="project-card">
-                    <div class="project-title">
-                        <h4>Hosting a Static Webiste : Amazon S3 ,Cloudfront</h4>
-                    </div>
-                    <div class ="project-content"> 
-                        <div class="project-image-container">
-                            <img src="img/project-images/netflix-powerbi-1.png">
-                        </div>
-                        <div class="project-description">
-                            <p>Buit and Hosted a static website , Using Amazon s3 ,Cloudfront</p>
-                            <p><span><b>Key Concepts: </b></span>s3 bucket storage,Identity Access Management,Public Access Conventions, Cloud Front Distributions </p>
-                            <p><span><b>Tools:</b></span>Amazon Simple Storage Service ,Cloudfront,ACL</p>
-                            <a href="https://github.com/Vmshibharadwaj19/Static-website-s3" , target="_blank" class="btn-box-primary">View on GitHub</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Project Six -->
-                                                                               
-            </div>                
-        </div>
-    </section>
-
-    <!-- =========================================Timeline========================================= -->
-    <section id="timeline" class="timeline-section">
-        <div class="timeline-container">
-          <h2 class="section-title reveal">My <span>Journey</span></h2>
-          <div class="timeline">
-            <!----Timeline Item One---->
-            <div class="timeline-item">
-              <div class="timeline-dot"></div>
-              <div class="timeline-content">
-                <h5>BE Electronics & Communication</h5>
-                <p><span>JNTUK (RIET)</span><br>2017 - 2021 <br>Merit (6.58)</p>
-                <button class="btn-box-secondary" onclick="openModal('education-be')"> Details </button>
-              </div>
-            </div>
-            <!----Timeline Item Two---->
-           
-            <!----Timeline Item Three---->
-         
-            <!----Timeline Item Four---->
-            <div class="timeline-item">
-              <div class="timeline-dot"></div>
-              <div class="timeline-content">
-                <h5>MSc Computing with Industrial Placement</h5>
-                <p><span>University of East London</span><br>2023 – 2025 <br>  Merit (65.08%)</p>
-                <button class="btn-box-secondary" onclick="openModal('education-msc')"> Details </button>
-              </div>
-            </div>
-      
-          </div>
-        </div>
-    </section>
-    
-    <!-- =========================================Tools Exposure========================================= -->
-    <section id="tools" class="tools-section">
-            <h1 class="section-title reveal">Tools <span>Exposure</span></h1>
-            <div class="tools-container">
-                <div class="tool-box">
-                    <img src="./img/logos/python.png" alt="Python">
-                    <p>Python</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/mysql.png" alt="MySQL">
-                    <p>MySQL</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/excel.png" alt="Excel">
-                    <p> Excel</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/powerbi.png" alt="PowerBI">
-                    <p>PowerBI</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/r-lang.png" alt="R">
-                    <p>C#</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/tableau.png" alt="Tableau">
-                    <p>Tableau</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/spss.png" alt="SPSS">
-                    <p>AWS</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/salesforce.png" alt="Salesforce">
-                    <p>Azure</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/sas.png" alt="SaS">
-                    <p>EC2 AWS</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/qlik.png" alt="Qlik">
-                    <p>Cloud Front</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/hubspot.png" alt="HubSpot">
-                    <p>S3 AWS</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/matlab.png" alt="matlab">
-                    <p>MATLAB</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/html.png" alt="HTML">
-                    <p>HTML</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/css.png" alt="CSS">
-                    <p>CSS</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/js.png" alt="Javascript">
-                    <p>JavaScript</p>
-                </div>
-    
-                <div class="tool-box">
-                    <img src="./img/logos/github.png" alt="GitHub">
-                    <p>GitHub</p>
-                </div>
-            </div>
-    </section>
-
-    <!-- ======================================== Contact ===================================================== -->
-    <section id="contact" class="contacts-section">
-        <div class="contacts-container">
-            <h2 class="section-title reveal">Let's <span>Connect</span></h2>
-            <div class="custom-card-flex-container">
-                <!-- Card One -->
-                <div class="custom-card">
-                    <div class="custom-card-body">
-                      <img src="img/github-profile.png" alt="GitHub Preview" class="custom-card-image">
-                      <p>Explore my code repositories and data projects.</p>
-                      <a href="https://github.com/Vmshibharadwaj19" target="_blank" class="btn-box-secondary">GitHub</a>
-                    </div>
-                </div>
-                <!-- Card Two 
-                <div class="custom-card">
-                    <div class="custom-card-body">
-                      <img src="img/medium-profile.png" alt="GitHub Preview" class="custom-card-image">
-                      <p>Data narratives and analytical studies - read my work.</p>
-                      <a href="https://medium.com/@v.lakshmikancharlapalli" target="_blank" class="btn-box-secondary">Medium</a>
-                    </div>
-                </div>
-                -->
-                <!-- Card three -->
-                <div class="custom-card">
-                    <div class="custom-card-body">
-                      <img src="img/linkedin-profile.png" alt="GitHub Preview" class="custom-card-image">
-                      <p>A snapshot of my academic and professional journey.</p>
-                      <a href="https://www.linkedin.com/in/vamshi-goteti-84191023b" target="_blank" class="btn-box-secondary">LinkedIn</a>
-                    </div>
-                </div>
-            </div>
-            <p class="logo reveal"> Thank You!</p>
-        </div>
-        <div class="copyright-text">
-            <p><i class="bx bx-copyright" style="color: white;"></i> 2025 Vamshi Prasad Goteti<br> All rights reserved </p>
-        </div> 
-    </section>
-
-    <!-- ===================================== Go Top Icon ===================================================== -->
-    <a href="#home" class="top"><i class="bx bx-up-arrow-alt"></i> </a>
-
-    <!-- =========================================Modals========================================= -->
-    <!--- Modal: Bachelor Education ---->
-    <div id="modal-be" class="custom-modal">
-        <div class="custom-modal-content">
-            <h2 class="custom-modal-heading">Bachelor of Engineering in Electronics and Communication</h2>
-            <div class="custom-modal-section">
-                <div class="custom-modal-text">
-                    <p><em>JNTU , August 2017 - September 2021</em> </p>
-                    <ul class="custom-modal-details">
-                        <li><b>Grade - </b> Merit</li>
-                        <li><b>Dissertation - </b> University Result Acquisition Using Aurdino </li>
-                        <li><b>Modules - </b> Software Engineering,Computer Networks, Database Systems </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="custom-modal-footer">
-                <span class="btn-box-primary close-button" data-modal="modal-be">Back</span>
-            </div>
-        </div>
-    </div>
-    <!--- Modal: Deloitte Experience ---->
-  
-    
-    <!--- Modal: Master Education ---->
-    <div id="modal-msc" class="custom-modal">
-        <div class="custom-modal-content">
-            <h2 class="custom-modal-heading">Master of Science in Computing</h2>
-            <div class="custom-modal-section">
-                <div class="custom-modal-text">
-                    <p><em>University of East London, September 2023 - January 2025 </em> </p>
-                    <ul class="custom-modal-details">
-                        <li><b><span>Grade</span> - </b> Merit </li>
-                        <li><b>Dissertation - </b>Generative Modelling of images using Generative Adversarial Networks </li>
-                        <li><b>Modules - </b> Probability and Statistics with Data; Storing, Manipulating and Visualising Data; Computational Statistics; Neural Networks and Deep Learning; Optimisation of Business Processess </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="custom-modal-footer">
-                <span class="btn-box-primary close-button" data-modal="modal-msc">Back</span>
-            </div>
-        </div>
-    </div>
-
-<!--========Scripts===== -->
-<script src="./files/script.js"></script>
-    <style data-typed-js-cursor-css="true">
-    .typed-cursor{
-      opacity: 1;
-    }
-    .typed-cursor.typed-cursor--blink{
-      animation: typedjsBlink 0.7s infinite;
-      -webkit-animation: typedjsBlink 0.7s infinite;
-              animation: typedjsBlink 0.7s infinite;
-    }
-    @keyframes typedjsBlink{
-      50% { opacity: 0.0; }
-    }
-    @-webkit-keyframes typedjsBlink{
-      0% { opacity: 1; }
-      50% { opacity: 0.0; }
-      100% { opacity: 1; }
-    }
-   </style>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
 </body>
 </html>
+<!--/*
+===========================================================
+ Project Reference — Dynamic Cards App
+===========================================================
+
+HTML IDs
+-----------------------------------------------------------
+#cards       → <div> container where cards are displayed
+#title       → <input> for card title
+#desc        → <textarea> for card description
+#add         → button to add a new card
+#clear       → button to clear all cards
+#empty       → <p> message shown if no cards exist
+#search      → <input> for live search
+#sort        → <select> dropdown for sorting (new/old/title)
+
+HTML Classes
+-----------------------------------------------------------
+.card        → <article> wrapper for each card
+.actions     → <div> holding action buttons (Edit, Delete, Done/Undo)
+.badge       → <span> small label (date or status)
+.small       → button style class (small size)
+.ghost       → button style class (secondary/ghost button)
+
+
+JavaScript Variables
+-----------------------------------------------------------
+const cardsEl      → reference to #cards container
+const titleInput   → reference to #title input
+const descInput    → reference to #desc textarea
+const addBtn       → reference to #add button
+const clearBtn     → reference to #clear button
+const emptyEl      → reference to #empty message
+const searchInput  → reference to #search input
+const sortSelect   → reference to #sort dropdown
+let cards          → array of all card objects in memory
+const STORAGE_KEY  → localStorage key name ("dynamic_cards_v1")
+
+
+Card Object Structure
+-----------------------------------------------------------
+{
+  id: string      → unique ID generated via uid()
+  title: string   → card title (trimmed)
+  desc: string    → card description (trimmed)
+  done: boolean   → status (false = Pending, true = Completed)
+  created: number → timestamp (Date.now(), milliseconds)
+}
+
+
+Functions
+-----------------------------------------------------------
+load()        → loads saved cards from localStorage
+save()        → saves current cards[] into localStorage
+uid()         → generates unique ID for a card
+createCardObject(title, desc) → creates card object with defaults
+render()      → refreshes UI (applies search + sorting + rebuilds cards)
+buildCard()   → builds <article> card element dynamically
+onEdit(id,el) → switch card into edit mode (title/desc inputs)
+onDelete(id)  → delete card by ID
+onToggleDone(id) → toggle card status (Done ↔ Undo)
+(addBtn click)   → add new card
+(clearBtn click) → clear all cards
+(search input)   → filter cards live
+(sort change)    → re-render cards with new order
+(titleInput Enter) → quick-add card with Enter key
+
+
+Storage
+-----------------------------------------------------------
+localStorage key: "dynamic_cards_v1"
+- Stores JSON string of cards[]
+- Restored on page load with load()
+
+Sorting Logic
+-----------------------------------------------------------
+"new"   → newest first (higher created timestamp → earlier in list)
+"old"   → oldest first (lower created timestamp → earlier in list)
+"title" → alphabetical by title
+===========================================================
+*/
+ -->
