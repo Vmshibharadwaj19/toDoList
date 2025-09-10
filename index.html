@@ -29,8 +29,8 @@
     }
 
     .app {
-      width: 900px;
-      max-width: 96%;
+      width: 100%;
+      max-width: 100%;
       background: rgba(255,255,255,0.6);
       border-radius: 14px;
       padding: 20px;
@@ -432,12 +432,12 @@
 </body>
 </html>
 <!--/*
-===========================================================
- Project Reference — Dynamic Cards App
-===========================================================
 
-HTML IDs
------------------------------------------------------------
+ Project Reference — Dynamic Cards App
+------------------------------------------------------------------------------------------------------
+
+HTML ID
+--------------------------------------------------------------------------------
 #cards       → <div> container where cards are displayed
 #title       → <input> for card title
 #desc        → <textarea> for card description
@@ -447,8 +447,8 @@ HTML IDs
 #search      → <input> for live search
 #sort        → <select> dropdown for sorting (new/old/title)
 
-HTML Classes
------------------------------------------------------------
+HTML Class
+-------------------------------------------------------------------------------
 .card        → <article> wrapper for each card
 .actions     → <div> holding action buttons (Edit, Delete, Done/Undo)
 .badge       → <span> small label (date or status)
@@ -457,7 +457,7 @@ HTML Classes
 
 
 JavaScript Variables
------------------------------------------------------------
+-----------------------------------------------------------------------
 const cardsEl      → reference to #cards container
 const titleInput   → reference to #title input
 const descInput    → reference to #desc textarea
@@ -470,8 +470,8 @@ let cards          → array of all card objects in memory
 const STORAGE_KEY  → localStorage key name ("dynamic_cards_v1")
 
 
-Card Object Structure
------------------------------------------------------------
+Card Object 
+---------------------------------------///////////////////////////////
 {
   id: string      → unique ID generated via uid()
   title: string   → card title (trimmed)
@@ -481,8 +481,8 @@ Card Object Structure
 }
 
 
-Functions
------------------------------------------------------------
+Function
+--------------------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 load()        → loads saved cards from localStorage
 save()        → saves current cards[] into localStorage
 uid()         → generates unique ID for a card
@@ -505,7 +505,7 @@ localStorage key: "dynamic_cards_v1"
 - Stores JSON string of cards[]
 - Restored on page load with load()
 
-Sorting Logic
+Sort
 -----------------------------------------------------------
 "new"   → newest first (higher created timestamp → earlier in list)
 "old"   → oldest first (lower created timestamp → earlier in list)
