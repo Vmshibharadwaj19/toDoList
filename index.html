@@ -6,169 +6,257 @@
   <title>Dynamic Element Creator — Demo</title>
   <style>
     :root {
-      --card: #0b1320;
-      --muted: #333;
-      --accent: #06b6d4;
-      --glass: rgba(255, 255, 255, 0.2);
-    }
+  --card: #0b1320;
+  --muted: #333;
+  --accent: #06b6d4;
+  --glass: rgba(255, 255, 255, 0.2);
+}
 
-    * {
-      box-sizing: border-box;
-      font-family: Inter, Ui-sans-serif, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
-    }
+* {
+  box-sizing: border-box;
+  font-family: Inter, Ui-sans-serif, system-ui, Segoe UI, Roboto, "Helvetica Neue", Arial;
+}
 
-    body {
-      margin: 0;
-      background: linear-gradient(120deg, #ffecd2 0%, #fcb69f 100%);
-      color: #222;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 36px;
-    }
+body {
+  margin: 0;
+  background: linear-gradient(120deg, #ffecd2 0%, #fcb69f 100%);
+  color: #222;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px;
+}
 
-    .app {
-      width: 100%;
-      max-width: 100%;
-      background: rgba(255,255,255,0.6);
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    }
+.app {
+  width: 100%;
+  max-width: 100%;
+  background: rgba(255,255,255,0.6);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
 
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
-    h1 {
-      font-size: 20px;
-      margin: 0;
-    }
+h1 {
+  font-size: 20px;
+  margin: 0;
+}
 
-    .controls {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
+.controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
 
-    input[type=text], 
-    textarea {
-      background: var(--glass);
-      border: 1px solid rgba(0,0,0,0.1);
-      color: inherit;
-      padding: 8px 10px;
-      border-radius: 8px;
-      outline: none;
-      min-width: 220px;
-    }
+input[type=text], 
+textarea {
+  background: var(--glass);
+  border: 1px solid rgba(0,0,0,0.1);
+  color: inherit;
+  padding: 8px 10px;
+  border-radius: 8px;
+  outline: none;
+  min-width: 220px;
+  max-width: 100%;
+}
 
-    textarea {
-      min-height: 64px;
-      resize: vertical;
-    }
+textarea {
+  min-height: 64px;
+  resize: vertical;
+}
 
-    button {
-      background: var(--accent);
-      border: none;
-      padding: 8px 12px;
-      border-radius: 8px;
-      color: #fff;
-      cursor: pointer;
-      font-weight: 600;
-    }
+button {
+  background: var(--accent);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
 
-    button.ghost {
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid rgba(0,0,0,0.1);
-    }
+button.ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid rgba(0,0,0,0.1);
+}
 
-    .layout {
-      display: block;
-    }
+.layout {
+  display: block;
+}
 
-    .left {
-      min-height: 320px;
-    }
+.left {
+  min-height: 320px;
+}
 
-    .filters {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
 
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 12px;
-    }
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
 
-    .card {
-      background: rgba(255,255,255,0.6);
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(0,0,0,0.05);
-      position: relative;
-      overflow: hidden;
-    }
+.card {
+  background: rgba(255,255,255,0.6);
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.05);
+  position: relative;
+  overflow: hidden;
+}
 
-    .card h3 {
-      margin: 0 0 8px 0;
-      font-size: 15px;
-    }
+.card h3 {
+  margin: 0 0 8px 0;
+  font-size: 15px;
+}
 
-    .card p {
-      margin: 0;
-      font-size: 13px;
-      color: var(--muted);
-      min-height: 36px;
-    }
+.card p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  min-height: 36px;
+}
 
-    .card .meta {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin-top: 8px;
-    }
+.card .meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
 
-    .badge {
-      font-size: 12px;
-      padding: 4px 6px;
-      border-radius: 8px;
-      background: rgba(0,0,0,0.05);
-      color: var(--muted);
-    }
+.badge {
+  font-size: 12px;
+  padding: 4px 6px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.05);
+  color: var(--muted);
+}
 
-    .card .actions {
-      position: absolute;
-      right: 8px;
-      top: 8px;
-      display: flex;
-      gap: 6px;
-    }
+.card .actions {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  display: flex;
+  gap: 6px;
+}
 
-    .small {
-      padding: 6px 8px;
-      font-size: 13px;
-      border-radius: 8px;
-    }
+.small {
+  padding: 6px 8px;
+  font-size: 13px;
+  border-radius: 8px;
+}
 
-    .empty {
-      color: var(--muted);
-      text-align: center;
-      padding: 40px 10px;
-    }
+.empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 40px 10px;
+}
 
-    footer {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-    }
+footer {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ============================= */
+/* Responsive Adjustments */
+/* ============================= */
+
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+  }
+
+  .app {
+    padding: 16px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .controls, 
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  input[type=text],
+  textarea,
+  select,
+  button {
+    width: 100%;
+  }
+
+  .cards {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 12px;
+  }
+
+  h1 {
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .filters {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .card h3 {
+    font-size: 14px;
+  }
+
+  .card p {
+    font-size: 12px;
+  }
+}
+
   </style>
 </head>
 <body>
