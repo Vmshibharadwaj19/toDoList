@@ -29,3 +29,64 @@ A simple and intuitive To-Do List application built with **React**. Keep track o
 ```bash
 git clone https://github.com/<your-username>/<your-repo-name>.git
 cd <your-repo-name>
+```
+
+## :star: 2.Install dependencies
+
+
+```bash
+npm install
+```
+## 3:start development
+
+```bash
+npm run dev
+```
+
+### Deploy to GitHub Pages:
+1.Install gh-pages if not installed:
+```bash
+npm install gh-pages --save-dev
+```
+2.Add deployment scripts in package.json
+```sCRIPTS
+"scripts": {
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d dist"
+}
+```
+3.Run Deployement
+```bash
+npm run deploy
+```
+⭐ Make sure the base in vite.config.js matches your repository name:
+base: '/<your-repo-name>/'
+
+
+## Project Structure
+
+```
+react-todo/
+├── public/
+├── src/
+│   ├── components/
+│   ├── App.jsx
+│   ├── index.css
+│   └── main.jsx
+├── vite.config.js
+├── package.json
+└── README.md
+```
+
+🙌 Contributing
+
+1.Fork the repository
+
+2.Create a new branch (git checkout -b feature/YourFeature)
+
+3.Make your changes and commit (git commit -m "Add feature")
+
+4.Push to the branch (git push origin feature/YourFeature)
+
+5.Open a Pull Request
+
