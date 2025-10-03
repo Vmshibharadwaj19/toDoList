@@ -84,15 +84,14 @@ react-todo/
 
 2.Create a new branch (git checkout -b feature/YourFeature)
 
-
-## 📄 License
-
-This project is open-source and available under the **MIT License**.
-See the [LICENSE](LICENSE) file for more info.
-
 3.Make your changes and commit (git commit -m "Add feature")
 
 4.Push to the branch (git push origin feature/YourFeature)
 
 5.Open a Pull Request
+
+## 📄 License
+
+This project is open-source and available under the **MIT License**.
+See the [LICENSE](LICENSE) file for more info.
 
